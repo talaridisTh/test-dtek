@@ -40,9 +40,10 @@ class CustomerController extends Controller
         }
         $data = [];
         $customers = array();
+
         //to be defined by auth system
         if($request->ajax() && !$skipAjax) {
-            $columns     = ['customer_id', 'customer_name', 'tax_id', 'phone', 'mobile', 'company_name', 'email', 'fax'];
+            $columns     = ['customer_id', 'tax_id', 'phone', 'mobile', 'company_name', 'email'];
             $draw        = $request->draw;
             $start       = $request->start; //Start is the offset
             $length      = $request->length; //How many records to show
@@ -57,6 +58,7 @@ class CustomerController extends Controller
 
             $user_id = Auth::id();
             $customers = Customer::getCustomers($searchValue,$columns[$column],$dir,$length);
+
 
             return [
                 'draw' => $draw,

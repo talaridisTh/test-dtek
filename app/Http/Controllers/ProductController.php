@@ -94,7 +94,7 @@ class ProductController extends Controller
             }
             $products = Product::searchProducts($searchValue, $columns_column, $dir, $length, $searchParams);
 
-			//dump($products);exit;
+            //dump($products);exit;
             return [
                 'draw' => $draw,
                 'recordsTotal' => $products->total(),
@@ -213,10 +213,10 @@ class ProductController extends Controller
         ];
 
         $p_qty = ProductQuantity::where('product_id', $product_id)
-                        ->where('warehouse_id', $warehouse_id)
-                        ->where('shelf_id', $shelf_id)
-                        ->where('batch', $batch)
-                        ->get();
+            ->where('warehouse_id', $warehouse_id)
+            ->where('shelf_id', $shelf_id)
+            ->where('batch', $batch)
+            ->get();
 
         if(!empty($p_qty) && sizeof($p_qty) > 0) {
             $p_qty = $p_qty[0];
@@ -320,7 +320,7 @@ class ProductController extends Controller
         ]);
     }
 
-     public function search(Request $request) {
+    public function search(Request $request) {
         $term = trim($request->q);
         $orderByStock = $request->stock_order;
         if(empty($term) && empty($request->product_id)) {
@@ -332,7 +332,7 @@ class ProductController extends Controller
         if(!empty($term)) {
             $searchParams = array(
                 "extra_dimension" => $term,
-                    "dimensions" => [null,null,null]
+                "dimensions" => [null,null,null]
             );
             if(!preg_match("/[.\-\/]/i", $term)) {
                 $searchParams['extra_dimension'] = $term[0] . '.' . substr($term, 1, strlen($term));

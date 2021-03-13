@@ -30,6 +30,8 @@ class Product extends Model
 
     static function searchProducts($searchValue,$orderBy,$dir,$length, $searchParams = [],$product_id = -1)
     {
+
+
         $products = Product::where(function($query) use ($searchValue){
             $query->orWhere('width', 'like', '%'.$searchValue.'%');
             $query->orWhere('model', 'like', '%'.$searchValue.'%');
@@ -58,8 +60,8 @@ class Product extends Model
 
                     $index++;
                 }
-        });
-
+        })->orderByDesc("width");
+/*task 4*/
         if(isset($searchParams['extra_dimension'])) {
             $products = $products->orWhere('product_indices.product_index', 'like', $searchParams['extra_dimension']. '%');
         }
@@ -132,6 +134,8 @@ class Product extends Model
 
     public function saveIndexes()
     {
+        
+
         ProductIndex::where('product_id',$this->id)->delete();
 
         $index1 = $this->width.$this->height_percentage.$this->radial_structure.$this->diameter;
