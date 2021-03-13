@@ -1,0 +1,36 @@
+From e63a2c8334084f406e7622e3c2b13cb935ecd6b2 Mon Sep 17 00:00:00 2001
+From: Thanos Talridis <a.talaridis@darkpony.com>
+Date: Sat, 13 Mar 2021 13:29:32 +0200
+Subject: [PATCH] fix(task) completed task-3
+
+---
+ public/assets/app/custom/invoice/list.js | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/public/assets/app/custom/invoice/list.js b/public/assets/app/custom/invoice/list.js
+index b0afaa2..60c57e2 100644
+--- a/public/assets/app/custom/invoice/list.js
++++ b/public/assets/app/custom/invoice/list.js
+@@ -72,8 +72,7 @@ var InvoiceKTDatatablesDataSourceAjaxServer = function() {
+ 					render: function(data, type, full, meta) {
+ 						const invoiceId = full.invoice_id;
+                         const orderId = full.order_id;
+-                        const invoice_status = full.invoice_status;
+-                        if(invoice_status == 0) {
++							/*task 3*/
+                             return `
+                                 <a class="btn btn-sm btn-clean btn-icon btn-icon-md" href="` + BASE_URL + `/invoices/` + invoiceId + `" target="_blank" title="Προβολή Τιμολογίου">
+                                     <i class="la flaticon-interface-11"></i>
+@@ -81,8 +80,7 @@ var InvoiceKTDatatablesDataSourceAjaxServer = function() {
+                                 <a class="btn btn-sm btn-clean btn-icon btn-icon-md cancel-invoice pointer" data-id="${invoiceId}" data-order-id="${orderId}" title="Ακύρωση Τιμολογίου">
+                                     <i class="la la-trash"></i>                                
+                                 </a>`;
+-                        }
+-                        return ``;
++
+ 					},
+ 				},
+ 			],
+-- 
+2.30.1.windows.1
+
