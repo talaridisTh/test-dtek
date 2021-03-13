@@ -1,0 +1,67 @@
+From d453ee728cd1c8c1b4b858ef25d5a61f207d835c Mon Sep 17 00:00:00 2001
+From: Thanos Talridis <a.talaridis@darkpony.com>
+Date: Sat, 13 Mar 2021 13:19:18 +0200
+Subject: [PATCH] fix(task): completed task-1
+
+---
+ app/Customer.php                         |  2 +-
+ app/Http/Controllers/OrderController.php | 15 +++++++++++----
+ 2 files changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/app/Customer.php b/app/Customer.php
+index e9a35b0..c937f4b 100644
+--- a/app/Customer.php
++++ b/app/Customer.php
+@@ -29,7 +29,7 @@ class Customer extends Model
+ 
+     public function addresses()
+     {
+-        return $this->hasMany('App\CustomerAddress','customer_id','customer_id');
++        return $this->hasMany('App\CustomerAddress','customer_id','customer_id')->whereNotNUll("address_1");
+     }
+ 
+     public function group()
+diff --git a/app/Http/Controllers/OrderController.php b/app/Http/Controllers/OrderController.php
+index 598de55..f203a7a 100644
+--- a/app/Http/Controllers/OrderController.php
++++ b/app/Http/Controllers/OrderController.php
+@@ -181,15 +181,22 @@ class OrderController extends Controller
+         return view('order/show', compact('order'));
+     }
+ 
+-    public function edit($id)
++    public function edit(Order $order)
+     {
+-        $order = Order::with('customer')->findOrFail($id);
++
++      /*  ---->Δεν χρειαζετε η σειρα αυτη εβαλα σαν παραμετρο το model οποτε το παιρνει αυτοματα ποιο ειναι <---*/
++//        $order = Order::with('customer')->findOrFail($id);
++
++         /* --> 1ος τροπος βαζουμε εδω το να μην βρισκει τα null  <---  */
++        /*  --> 2ος το βαζουμε στο model Customer ετσι το εκανα <---  */
++
+         $data = array(
+             'order' => $order,
+             'customer' => $order->customer,
+             'json_discounts' => $order->customer->group->discounts,
+             'discounts' => json_decode($order->customer->group->discounts, true),
+             'customer_addresses' => json_encode($order->customer->addresses),
++//            'customer_addresses' => json_encode($order->customer->addresses()->whereNotNUll("address_1")->get())   /*1ος τροπος*/
+         );
+ 
+         $data['order_products'] =  $order->getFinalizedProducts();
+@@ -232,9 +239,9 @@ class OrderController extends Controller
+         }
+ 
+         $data['isEdit'] = true;
+-        $data['action'] = route('orders.update', $id);
++        $data['action'] = route('orders.update', $order->order_id);
+         $data['method'] = 'PUT';
+-        $data['title'] = "Επεξεργασία Παραγγελίας : " . $id;
++        $data['title'] = "Επεξεργασία Παραγγελίας : " . $order->order_id;
+         $data['notifications'] = User::getNotifications();
+         $data['environmental_tax'] = OrderController::$environmental_tax;
+ 
+-- 
+2.30.1.windows.1
+
