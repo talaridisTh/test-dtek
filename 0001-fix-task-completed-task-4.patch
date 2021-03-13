@@ -1,0 +1,117 @@
+From f0e45b97a661984b0a38971584ca106f370acef8 Mon Sep 17 00:00:00 2001
+From: Thanos Talridis <a.talaridis@darkpony.com>
+Date: Sat, 13 Mar 2021 21:38:03 +0200
+Subject: [PATCH] fix(task): completed task-4
+
+---
+ app/Http/Controllers/CustomerController.php |  4 +++-
+ app/Http/Controllers/ProductController.php  | 14 +++++++-------
+ app/Product.php                             |  8 ++++++--
+ 3 files changed, 16 insertions(+), 10 deletions(-)
+
+diff --git a/app/Http/Controllers/CustomerController.php b/app/Http/Controllers/CustomerController.php
+index 75c4480..9277c9d 100644
+--- a/app/Http/Controllers/CustomerController.php
++++ b/app/Http/Controllers/CustomerController.php
+@@ -40,9 +40,10 @@ class CustomerController extends Controller
+         }
+         $data = [];
+         $customers = array();
++
+         //to be defined by auth system
+         if($request->ajax() && !$skipAjax) {
+-            $columns     = ['customer_id', 'customer_name', 'tax_id', 'phone', 'mobile', 'company_name', 'email', 'fax'];
++            $columns     = ['customer_id', 'tax_id', 'phone', 'mobile', 'company_name', 'email'];
+             $draw        = $request->draw;
+             $start       = $request->start; //Start is the offset
+             $length      = $request->length; //How many records to show
+@@ -58,6 +59,7 @@ class CustomerController extends Controller
+             $user_id = Auth::id();
+             $customers = Customer::getCustomers($searchValue,$columns[$column],$dir,$length);
+ 
++
+             return [
+                 'draw' => $draw,
+                 'recordsTotal' => $customers->total(),
+diff --git a/app/Http/Controllers/ProductController.php b/app/Http/Controllers/ProductController.php
+index b353f6b..655b37c 100644
+--- a/app/Http/Controllers/ProductController.php
++++ b/app/Http/Controllers/ProductController.php
+@@ -94,7 +94,7 @@ class ProductController extends Controller
+             }
+             $products = Product::searchProducts($searchValue, $columns_column, $dir, $length, $searchParams);
+ 
+-			//dump($products);exit;
++            //dump($products);exit;
+             return [
+                 'draw' => $draw,
+                 'recordsTotal' => $products->total(),
+@@ -213,10 +213,10 @@ class ProductController extends Controller
+         ];
+ 
+         $p_qty = ProductQuantity::where('product_id', $product_id)
+-                        ->where('warehouse_id', $warehouse_id)
+-                        ->where('shelf_id', $shelf_id)
+-                        ->where('batch', $batch)
+-                        ->get();
++            ->where('warehouse_id', $warehouse_id)
++            ->where('shelf_id', $shelf_id)
++            ->where('batch', $batch)
++            ->get();
+ 
+         if(!empty($p_qty) && sizeof($p_qty) > 0) {
+             $p_qty = $p_qty[0];
+@@ -320,7 +320,7 @@ class ProductController extends Controller
+         ]);
+     }
+ 
+-     public function search(Request $request) {
++    public function search(Request $request) {
+         $term = trim($request->q);
+         $orderByStock = $request->stock_order;
+         if(empty($term) && empty($request->product_id)) {
+@@ -332,7 +332,7 @@ class ProductController extends Controller
+         if(!empty($term)) {
+             $searchParams = array(
+                 "extra_dimension" => $term,
+-                    "dimensions" => [null,null,null]
++                "dimensions" => [null,null,null]
+             );
+             if(!preg_match("/[.\-\/]/i", $term)) {
+                 $searchParams['extra_dimension'] = $term[0] . '.' . substr($term, 1, strlen($term));
+diff --git a/app/Product.php b/app/Product.php
+index 567c7e5..6f51751 100644
+--- a/app/Product.php
++++ b/app/Product.php
+@@ -30,6 +30,8 @@ class Product extends Model
+ 
+     static function searchProducts($searchValue,$orderBy,$dir,$length, $searchParams = [],$product_id = -1)
+     {
++
++
+         $products = Product::where(function($query) use ($searchValue){
+             $query->orWhere('width', 'like', '%'.$searchValue.'%');
+             $query->orWhere('model', 'like', '%'.$searchValue.'%');
+@@ -58,8 +60,8 @@ class Product extends Model
+ 
+                     $index++;
+                 }
+-        });
+-
++        })->orderByDesc("width");
++/*task 4*/
+         if(isset($searchParams['extra_dimension'])) {
+             $products = $products->orWhere('product_indices.product_index', 'like', $searchParams['extra_dimension']. '%');
+         }
+@@ -132,6 +134,8 @@ class Product extends Model
+ 
+     public function saveIndexes()
+     {
++        
++
+         ProductIndex::where('product_id',$this->id)->delete();
+ 
+         $index1 = $this->width.$this->height_percentage.$this->radial_structure.$this->diameter;
+-- 
+2.30.1.windows.1
+
