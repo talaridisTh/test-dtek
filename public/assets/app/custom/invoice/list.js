@@ -72,8 +72,7 @@ var InvoiceKTDatatablesDataSourceAjaxServer = function() {
 					render: function(data, type, full, meta) {
 						const invoiceId = full.invoice_id;
                         const orderId = full.order_id;
-                        const invoice_status = full.invoice_status;
-                        if(invoice_status == 0) {
+							/*task 3*/
                             return `
                                 <a class="btn btn-sm btn-clean btn-icon btn-icon-md" href="` + BASE_URL + `/invoices/` + invoiceId + `" target="_blank" title="Προβολή Τιμολογίου">
                                     <i class="la flaticon-interface-11"></i>
@@ -81,8 +80,7 @@ var InvoiceKTDatatablesDataSourceAjaxServer = function() {
                                 <a class="btn btn-sm btn-clean btn-icon btn-icon-md cancel-invoice pointer" data-id="${invoiceId}" data-order-id="${orderId}" title="Ακύρωση Τιμολογίου">
                                     <i class="la la-trash"></i>                                
                                 </a>`;
-                        }
-                        return ``;
+
 					},
 				},
 			],
