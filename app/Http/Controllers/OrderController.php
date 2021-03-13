@@ -181,15 +181,22 @@ class OrderController extends Controller
         return view('order/show', compact('order'));
     }
 
-    public function edit($id)
+    public function edit(Order $order)
     {
-        $order = Order::with('customer')->findOrFail($id);
+
+      /*  ---->Δεν χρειαζετε η σειρα αυτη εβαλα σαν παραμετρο το model οποτε το παιρνει αυτοματα ποιο ειναι <---*/
+//        $order = Order::with('customer')->findOrFail($id);
+
+         /* --> 1ος τροπος βαζουμε εδω το να μην βρισκει τα null  <---  */
+        /*  --> 2ος το βαζουμε στο model Customer ετσι το εκανα <---  */
+
         $data = array(
             'order' => $order,
             'customer' => $order->customer,
             'json_discounts' => $order->customer->group->discounts,
             'discounts' => json_decode($order->customer->group->discounts, true),
             'customer_addresses' => json_encode($order->customer->addresses),
+//            'customer_addresses' => json_encode($order->customer->addresses()->whereNotNUll("address_1")->get())   /*1ος τροπος*/
         );
 
         $data['order_products'] =  $order->getFinalizedProducts();
@@ -232,9 +239,9 @@ class OrderController extends Controller
         }
 
         $data['isEdit'] = true;
-        $data['action'] = route('orders.update', $id);
+        $data['action'] = route('orders.update', $order->order_id);
         $data['method'] = 'PUT';
-        $data['title'] = "Επεξεργασία Παραγγελίας : " . $id;
+        $data['title'] = "Επεξεργασία Παραγγελίας : " . $order->order_id;
         $data['notifications'] = User::getNotifications();
         $data['environmental_tax'] = OrderController::$environmental_tax;
 

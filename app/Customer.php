@@ -29,7 +29,7 @@ class Customer extends Model
 
     public function addresses()
     {
-        return $this->hasMany('App\CustomerAddress','customer_id','customer_id');
+        return $this->hasMany('App\CustomerAddress','customer_id','customer_id')->whereNotNUll("address_1");
     }
 
     public function group()
