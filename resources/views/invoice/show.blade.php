@@ -86,7 +86,8 @@
                             <div class="col-md-10 col-md-offset-1">
                                 <div class="row mtop20">
                                     <div class="col-md-5 col-sm-5 transaction-html-info-col-left">
-                                      <h4 class="bold invoice-html-number">INV-{{$invoice['invoice_id']}}</h4>
+<!--                                        task 2 -->
+                                      <h4 class="bold invoice-html-number">{{$invoice['invoice_id']}}</h4>
                                       <address class="invoice-html-company-info">
                                         <b style="color:black" class="company-name-formatted">{{$store_info['name']}}</b>
                                           <br>{{ $store_info['profession'] }}<br>ΤΗΛ {{ $store_info['phone'] }}
