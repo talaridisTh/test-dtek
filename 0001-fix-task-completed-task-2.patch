@@ -1,0 +1,26 @@
+From a7559a3e88d8cc4ca29d580f960f2bf0d9180be1 Mon Sep 17 00:00:00 2001
+From: Thanos Talridis <a.talaridis@darkpony.com>
+Date: Sat, 13 Mar 2021 13:24:11 +0200
+Subject: [PATCH] fix(task) completed task-2
+
+---
+ resources/views/invoice/show.blade.php | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/resources/views/invoice/show.blade.php b/resources/views/invoice/show.blade.php
+index cbf03b2..acd64df 100644
+--- a/resources/views/invoice/show.blade.php
++++ b/resources/views/invoice/show.blade.php
+@@ -86,7 +86,8 @@
+                             <div class="col-md-10 col-md-offset-1">
+                                 <div class="row mtop20">
+                                     <div class="col-md-5 col-sm-5 transaction-html-info-col-left">
+-                                      <h4 class="bold invoice-html-number">INV-{{$invoice['invoice_id']}}</h4>
++<!--                                        task 2 -->
++                                      <h4 class="bold invoice-html-number">{{$invoice['invoice_id']}}</h4>
+                                       <address class="invoice-html-company-info">
+                                         <b style="color:black" class="company-name-formatted">{{$store_info['name']}}</b>
+                                           <br>{{ $store_info['profession'] }}<br>ΤΗΛ {{ $store_info['phone'] }}
+-- 
+2.30.1.windows.1
+
